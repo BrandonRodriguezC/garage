@@ -1,0 +1,38 @@
+-- ...................SCRIPT...................
+
+-- —————————————PRECIO—————————————////////
+
+-- INSERT INTO PRECIO (TIPOPARQUEADERO, PRECIOMINUTO, PRECIOHORA, PRECIORESERVA, PRECIOINTERRUPCION)
+-- VALUES ('Alturas o Subterraneos', 107.5, 6450, 0 ,3210);
+
+-- INSERT INTO PRECIO (TIPOPARQUEADERO, PRECIOMINUTO, PRECIOHORA, PRECIORESERVA, PRECIOINTERRUPCION)
+-- VALUES ('Concreto, Asfalto o Gravilla', 75.5, 4550, 0 , 2265);
+
+-- INSERT INTO PRECIO (TIPOPARQUEADERO, PRECIOMINUTO, PRECIOHORA, PRECIORESERVA, PRECIOINTERRUPCION)
+-- VALUES ('Piso en Afirmado o Cesped', 54, 3250, 0 , 1620);
+
+-- —————————————USUARIO—————————————////////
+
+DELETE FROM USUARIO AS u WHERE u.USUARIO = 'testUser';
+
+DELETE FROM USUARIO AS u WHERE u.USUARIO = 'testPark';
+
+-- —————————————CLIENTE—————————————////////
+
+DELETE FROM CLIENTE AS c WHERE c.NUMEROLICENCIA = '1';
+
+-- —————————————PARQUEADERO——————————////////
+
+DELETE FROM PARQUEADERO AS p WHERE p.NIT = '11';
+
+-- —————————————PLAZA———————————————////////
+
+DELETE FROM PLAZA AS p WHERE p.PLAZAID = 'A1-11';
+
+DELETE FROM PLAZA AS p WHERE p.PLAZAID = 'A2-11';
+
+DELETE FROM PLAZA AS p WHERE p.PLAZAID = 'A3-11';
+
+-- —————————————RESERVA————————————— ////////
+
+DELETE FROM RESERVA AS r WHERE r.PLAZAID = 'A1-11';

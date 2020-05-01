@@ -1,0 +1,147 @@
+// ...................CONSTRUCTORES...................
+// ——————————— CLIENTE————————————————
+ public Cliente() {
+    }
+
+    public Cliente(String numerolicencia) {
+        this.numerolicencia = numerolicencia;
+    }
+
+    public Cliente(String numerolicencia, String nombre, String apellido, String documentoidentidad, String tipodocumento) {
+        this.numerolicencia = numerolicencia;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.documentoidentidad = documentoidentidad;
+        this.tipodocumento = tipodocumento;
+    }
+    
+    public Cliente(Usuario usuario, String numerolicencia, String nombre, String apellido, String documentoidentidad, String tipodocumento) {
+        this.usuario = usuario;
+        this.numerolicencia = numerolicencia;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.documentoidentidad = documentoidentidad;
+        this.tipodocumento = tipodocumento;
+    }
+
+// ——————————— PARQUEADERO————————————————
+ public Parqueadero() {
+    }
+
+    public Parqueadero(String nit) {
+        this.nit = nit;
+    }
+
+    public Parqueadero(String nit, String nombre, String ciudad, String direccion, String localidad) {
+        this.nit = nit;
+        this.nombre = nombre;
+        this.ciudad = ciudad;
+        this.direccion = direccion;
+        this.localidad = localidad;
+    }
+
+        public Parqueadero(Usuario usuario, String nit, String nombre, Precio tipoParqueadero, double longitud, double latitud, String ciudad, String direccion, String Localidad) {
+        this.usuario = usuario;
+        this.nit = nit;
+        this.nombre = nombre;
+        this.longitud=longitud;
+        this.latitud=latitud;
+        this.tipoparqueadero=tipoParqueadero;
+        this.ciudad=ciudad;
+        this.direccion=direccion;
+        this.localidad=Localidad;
+    }
+
+// ——————————— PLAZA————————————————
+public Plaza() {
+    }
+
+    public Plaza(String plazaid) {
+        this.plazaid = plazaid;
+    }
+
+    public Plaza(String plazaid, String tipodeauto) {
+        this.plazaid = plazaid;
+        this.tipodeauto = tipodeauto;
+    }
+
+    public Plaza(Parqueadero parqueadero, String plazaid, String tipodeauto) {
+        this.nit = parqueadero;
+        this.plazaid = plazaid;
+        this.tipodeauto = tipodeauto;
+
+    }
+
+// ——————————— PRECIO————————————————
+public Precio() {
+    }
+
+    public Precio(String tipoparqueadero) {
+        this.tipoparqueadero = tipoparqueadero;
+    }
+
+    public Precio(String tipoparqueadero, double preciominuto, double preciohora, double precioreserva, double preciointerrupcion) {
+        this.tipoparqueadero = tipoparqueadero;
+        this.preciominuto = preciominuto;
+        this.preciohora = preciohora;
+        this.precioreserva = precioreserva;
+        this.preciointerrupcion = preciointerrupcion;
+    }
+
+// ——————————— RESERVA————————————————
+public Reserva() {
+    }
+
+    public Reserva(ReservaPK reservaPK) {
+        this.reservaPK = reservaPK;
+    }
+
+    public Reserva(ReservaPK reservaPK, Boolean activo, String modelo, String placa) {
+        this.reservaPK = reservaPK;
+        this.activo = activo;
+        this.modelo = modelo;
+        this.placa = placa;
+    }
+
+    public Reserva(String fecha, String plazaid) {
+        this.reservaPK = new ReservaPK(fecha, plazaid);
+    }
+
+     public Reserva(ReservaPK reservaPK, Cliente numeroLicencia, String modelo, String placa, Boolean activo) {
+        this.reservaPK = reservaPK;
+        this.numerolicencia = numeroLicencia;
+        this.activo = activo;
+        this.modelo = modelo;
+        this.placa = placa;
+    }
+
+    public Reserva(ReservaPK reservaPK, Cliente numeroLicencia, String modelo, String placa, Boolean activo, String fechaReserva) {
+        this.reservaPK = reservaPK;
+        this.numerolicencia = numeroLicencia;
+        this.activo = activo;
+        this.modelo = modelo;
+        this.placa = placa;
+        this.fechareserva = fechaReserva;
+    }
+// ——————————— RESERVAPK————————————————
+  public ReservaPK() {
+    }
+
+    public ReservaPK(String fecha, String plazaid) {
+        this.fecha = fecha;
+        this.plazaid = plazaid;
+    }
+
+// ——————————— USUARIO————————————————
+public Usuario() {
+    }
+
+    public Usuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public Usuario(String usuario, String contrasena, String tipodeusuario) {
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.tipodeusuario = tipodeusuario;
+    }

@@ -1,0 +1,64 @@
+-- ...................BASE DE DATOS...................
+
+CREATE TABLE usuario (
+usuario varchar(30) NOT NULL PRIMARY KEY,
+contrasena varchar(30) NOT NULL,
+tipoDeUsuario varchar(30) NOT NULL
+);
+
+CREATE TABLE cliente(
+numeroLicencia varchar(20) NOT NULL PRIMARY KEY,
+usuario varchar(30),
+nombre varchar(50) NOT NULL,
+apellido varchar(50) NOT NULL,
+documentoIdentidad varchar(20) NOT NULL,
+tipoDocumento varchar(5) NOT NULL,
+correo varchar(50),
+telefono varchar(10),
+FOREIGN KEY (usuario) REFERENCES usuario(usuario)
+);
+
+CREATE TABLE precio(
+tipoParqueadero varchar(30) NOT NULL PRIMARY KEY,
+precioMinuto double NOT NULL,
+precioHora double NOT NULL,
+precioReserva double NOT NULL,
+precioInterrupcion double NOT NULL
+);
+
+CREATE TABLE parqueadero(
+nit varchar(20) NOT NULL PRIMARY KEY,
+usuario varchar(30) NOT NULL,
+nombre varchar(20) NOT NULL,
+tipoParqueadero varchar(30) NOT NULL,
+ciudad varchar(30) NOT NULL,
+direccion varchar(30) NOT NULL,
+latitud double,
+longitud double,
+localidad varchar(20) NOT NULL,
+FOREIGN KEY (tipoParqueadero) REFERENCES precio(tipoParqueadero),
+FOREIGN KEY (usuario) REFERENCES usuario(usuario)
+);
+
+CREATE TABLE PLAZA(
+plazaId varchar(30) NOT NULL PRIMARY KEY,
+nit varchar(20) NOT NULL,
+tipoDeAuto varchar(20) NOT NULL,
+FOREIGN KEY (nit) REFERENCES parqueadero(nit)
+);
+
+CREATE TABLE reserva(
+fecha varchar(30) NOT NULL,
+plazaId varchar(30) NOT NULL,
+numeroLicencia varchar(20),
+activo boolean NOT NULL,
+modelo varchar(20) NOT NULL,
+placa varchar(10) NOT NULL,
+fechaReserva varchar(30),
+fechaEntrada varchar(30),
+fechaSalida varchar(30),
+valor double,
+PRIMARY KEY (fecha, plazaId),
+FOREIGN KEY (plazaId) REFERENCES plaza(plazaId),
+FOREIGN KEY (numeroLicencia) REFERENCES cliente(numeroLicencia)
+);
