@@ -35,7 +35,7 @@ public interface ReservaFacadeLocal {
 
     List<Object[]> reportesUsuario(String numeroLicencia, String localidad, String fecha);
     
-    Object[] costo(ReservaPK llave);
+    double costo(ReservaPK llave, String accion);
 
     List<Object[]> reporteTotal(String fecha);
 
@@ -50,5 +50,9 @@ public interface ReservaFacadeLocal {
     List<Object[]> reportesParqueadero(String nombreParqueadero, String fechaInicio, String fechaFin);
     
     List<Object[]> reporteHorario(String nombreParqueadero, String fecha, String tipo);
+    
+    List<Object[]> historialParqueadero(String nit);
+    
+    List<Object[]> pendientesParqueadero(String nit) ;
 
 }

@@ -32,8 +32,6 @@ public interface ParqueaderoFacadeLocal {
     
     Parqueadero getParqueadero(String usuario);
     
-    List<Object[]> reservasActivas(String nit);
-    
     List<Object[]> reservasActivas(String nit, String fecha);
     
     List<Object[]> plazasDisponibles(String usuarioparqueadero, String tipoDeAuto);

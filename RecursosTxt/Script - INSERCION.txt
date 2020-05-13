@@ -14,10 +14,22 @@ VALUES ('Piso en Afirmado o Cesped', 54, 3250, 0 , 1620);
 -- —————————————USUARIO—————————————////////
 
 INSERT INTO USUARIO (USUARIO, CONTRASENA, TIPODEUSUARIO)
-VALUES ('testUser', '123', 'usuario')
+VALUES ('testUser', '123', 'usuario');
 
 INSERT INTO USUARIO (USUARIO, CONTRASENA, TIPODEUSUARIO)
-VALUES ('testPark', '123', 'parqueadero')
+VALUES ('testUser2', '123', 'usuario');
+
+INSERT INTO USUARIO (USUARIO, CONTRASENA, TIPODEUSUARIO)
+VALUES ('testPark', '123', 'parqueadero');
+
+INSERT INTO USUARIO (USUARIO, CONTRASENA, TIPODEUSUARIO)
+VALUES ('testPark2', '123', 'parqueadero');
+
+INSERT INTO USUARIO (USUARIO, CONTRASENA, TIPODEUSUARIO)
+VALUES ('testPark3', '123', 'parqueadero');
+
+INSERT INTO USUARIO (USUARIO, CONTRASENA, TIPODEUSUARIO) 
+VALUES ('minTransporte', '123', 'mintransporte');
 
 
 -- —————————————CLIENTE—————————————////////
@@ -25,10 +37,20 @@ VALUES ('testPark', '123', 'parqueadero')
 INSERT INTO CLIENTE (NUMEROLICENCIA, USUARIO, NOMBRE, APELLIDO, DOCUMENTOIDENTIDAD, TIPODOCUMENTO)
 VALUES ('1', 'testUser', 'User', 'Test', '1234567','C.C' );
 
+INSERT INTO CLIENTE (NUMEROLICENCIA, USUARIO, NOMBRE, APELLIDO, DOCUMENTOIDENTIDAD, TIPODOCUMENTO)
+VALUES ('2', 'testUser2', 'User', 'Test', '7654321','C.C' );
+
 -- —————————————PARQUEADERO——————————////////
 
 INSERT INTO PARQUEADERO (NIT, USUARIO, NOMBRE, TIPOPARQUEADERO, CIUDAD, DIRECCION, LATITUD, LONGITUD, LOCALIDAD)
-VALUES ('11', 'testPark', 'TEST PARK', 'Alturas o Subterraneos', 'Bogota D.C', 'TTT-TTT-TTT', 4.632460, -74.065559, '2 Chapinero' )
+VALUES ('11', 'testPark', 'TEST PARK 1', 'Alturas o Subterraneos', 'Bogota D.C', 'Calle 66 #11-67', 4.652076, -74.062383, '2 Chapinero' );
+
+INSERT INTO PARQUEADERO (NIT, USUARIO, NOMBRE, TIPOPARQUEADERO, CIUDAD, DIRECCION, LATITUD, LONGITUD, LOCALIDAD)
+VALUES ('12', 'testPark2', 'TEST PARK 2', 'Concreto, Asfalto o Gravilla', 'Bogota D.C', 'Ak. 15 #124-30', 4.702128, -74.041548, '1 Usaquen');
+
+INSERT INTO PARQUEADERO (NIT, USUARIO, NOMBRE, TIPOPARQUEADERO, CIUDAD, DIRECCION, LATITUD, LONGITUD, LOCALIDAD)
+VALUES ('13', 'testPark3', 'TEST PARK 3', 'Piso en Afirmado o Cesped', 'Bogota D.C', 'Calle 19 #10-89 a 10-1', 4.607048, -74.074470, '3 Santa Fe');
+
 
 -- —————————————PLAZA———————————————////////
 
@@ -40,6 +62,24 @@ VALUES ('A2-11', '11', 'Pesados');
 
 INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
 VALUES ('A3-11', '11', 'Especial o Agricola');
+
+INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
+VALUES ('A1-12', '12', 'Ligeros');
+
+INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
+VALUES ('A2-12', '12', 'Pesados');
+
+INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
+VALUES ('A3-12', '12', 'Especial o Agricola');
+
+INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
+VALUES ('A1-13', '13', 'Ligeros');
+
+INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
+VALUES ('A2-13', '13', 'Pesados');
+
+INSERT INTO PLAZA (PLAZAID, NIT, TIPODEAUTO)
+VALUES ('A3-13', '13', 'Especial o Agricola');
 
 -- —————————————RESERVA————————————— ////////
 

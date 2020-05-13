@@ -4,9 +4,10 @@
     Author     : Diego
 --%>
 
+<%@page import="com.garage.datos.Operaciones"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="es" xml:lang="es">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="assests/styles.css">
@@ -14,12 +15,9 @@
     </head>
     <body class="imagen2">
         <%
-            String localidades[] = {"Usaquen", "Chapinero", "Santa Fe", "Sancristobal", "Usme", "Tunjuelito", "Bosa",
-                "Kennedy", "Fontibon", "Engativa", "Suba", "Barrios Unidos", "Teusaquillo", "Los Mártires",
-                "Antonio Nariño", "Puente Aranda", "La Candelaria", "Rafael Uribe Uribe", "Ciudad Bolivar",
-                "Sumapaz"};
-            String tipoParqueadero[] = {"Alturas o Subterraneos", "Concreto, Asfalto o Gravilla",
-                "Piso en Afirmado o Cesped"};
+            Operaciones ope = new Operaciones();
+            String localidades[] = ope.getLocalidades();
+            String tipoParqueadero[] = ope.getTipoParqueadero();
         %>
 
         <div class="imagen2">
@@ -31,19 +29,19 @@
                         <form action="./SolicitudIngreso" method="POST" >
 
                             <label for="numeroLicencia">Numero Licencia</label>
-                            <input type="text" name="numeroLicencia" id="numeroLicencia" required> <br><br>
+                            <input type="text" name="numeroLicencia" id="numeroLicencia" maxlength="20" required> <br><br>
 
                             <label for="usuario"> Usuario: </label>
-                            <input type="text" name="usuario" id="usuario" required> <br><br>
+                            <input type="text" name="usuario" id="usuario" maxlength="30" required> <br><br>
 
                             <label for="contrasena"> Contraseña: </label>
-                            <input type="password" name="contrasena" id="contrasena" required> <br><br>
+                            <input type="password" name="contrasena" id="contrasena" maxlength="30" required> <br><br>
 
                             <label for="nombre"> Nombre: </label>
-                            <input type="text" name="nombre" id="nombre" required> <br><br>
+                            <input type="text" name="nombre" id="nombre"  maxlength="50" required> <br><br>
 
                             <label for="apellido"> Apellido: </label>
-                            <input type="text" name="apellido" id="apellido" required> <br><br>
+                            <input type="text" name="apellido" id="apellido" maxlength="50" required> <br><br>
 
                             <label for="tipoDocumento"> Tipo de Documento: </label>
                             <select name="tipoDocumento" id="tipoDocumento" required>
@@ -53,13 +51,17 @@
                             </select> <br><br>
 
                             <label for="documentoIdentidad"> Documento de Identidad: </label>
-                            <input type="text" name="documentoIdentidad" id="documentoIdentidad" onkeypress='return event.charCode >= 48 && event.charCode <= 57'> <br><br>
+                            <input type="text" name="documentoIdentidad" id="documentoIdentidad" maxlength="20" >
+                            <!--onkeypress='return event.charCode >= 48 && event.charCode <= 57'-->
+                            <br><br>
 
                             <label for="correo"> E-mail: </label>
-                            <input type="email" name="correo" id="correo"> <br><br>
+                            <input type="email" name="correo" id="correo" maxlength="50"> <br><br>
 
                             <label for="telefono"> Telefono: </label>
-                            <input type="text" name="telefono" id="telefono" onkeypress='return event.charCode >= 48 && event.charCode <= 57'> <br><br>
+                            <input type="text" name="telefono" id="telefono" maxlength="10" > 
+                            <!--onkeypress='return event.charCode >= 48 && event.charCode <= 57'-->
+                            <br><br>
 
                             <input type="hidden" name="tipoCliente" value="usuario">
 
@@ -73,16 +75,16 @@
                             <input type="hidden" name="formato" value="parqueadero">
 
                             <label for="nit">Nit</label>
-                            <input type="text" name="nit" id="nit" required> <br><br>
+                            <input type="text" name="nit" id="nit" maxlength="20" required> <br><br>
 
                             <label for="usuario"> Usuario: </label>
-                            <input type="text" name="usuario" id="usuario" required> <br><br>
+                            <input type="text" name="usuario" id="usuario" maxlength="30" required> <br><br>
 
                             <label for="contrasena"> Contraseña: </label>
-                            <input type="password" name="contrasena" id="contrasena" required> <br><br>
+                            <input type="password" name="contrasena" id="contrasena" maxlength="30" required> <br><br>
 
                             <label for="nombreParqueadero"> Nombre Parqueadero: </label>
-                            <input type="text" name="nombreParqueadero" id="nombreParqueadero" required> <br><br>
+                            <input type="text" name="nombreParqueadero" id="nombreParqueadero" maxlength="20" required> <br><br>
 
                             <label for="ciudad"> Ciudad: </label>
                             <select name="ciudad" id="ciudad">
@@ -90,7 +92,7 @@
                             </select> <br><br>
 
                             <label for="direccion"> Dirección: </label>
-                            <input type="text" name="direccion" id="direccion" required> <br><br>
+                            <input type="text" name="direccion" id="direccion" maxlength="30" required> <br><br>
 
                             <label for="tipo_Parqueadero"> Tipo de Parqueadero: </label> <br><br>
 
@@ -112,10 +114,10 @@
                             </select> <br><br>
 
                             <label for="latitud"> Latitud: </label>
-                            <input type="text" name="latitud" id="latitud" > <br><br>
+                            <input type="text" name="latitud" id="latitud" maxlength="52" > <br><br>
 
                             <label for="longitud"> Longitud: </label>
-                            <input type="text" name="longitud" id="longitud" > <br><br>
+                            <input type="text" name="longitud" id="longitud" maxlength="52" > <br><br>
 
                             <input type="hidden" name="tipoCliente" value="parqueadero">
 

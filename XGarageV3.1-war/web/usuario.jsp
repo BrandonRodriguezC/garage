@@ -9,7 +9,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="es" xml:lang="es">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="assests/styles.css">
@@ -105,20 +105,22 @@
                             <h2>Tus reservas</h2>
                             <form action="./RespuestaUsuario" method="GET">
                                 <table class="tableQ">
-                                    <th>Parqueadero</th>
-                                    <th>Direccion</th>
-                                    <th>Plaza Id</th>
-                                    <th>Fecha de Reserva</th>
-                                    <th>Calcular Deuda</th>
-                                    <th>Cancelar</th>
-                                        <c:forEach items="${reservasActivas}" var="reservaActiva">
+                                    <caption>Reservas</caption>
+                                    <th id="tablaReservas">Parqueadero</th>
+                                    <th id="tablaReservas">Direccion</th>
+                                    <th id="tablaReservas">Plaza Id</th>
+                                    <th id="tablaReservas">Fecha de Reserva</th>
+                                    <th id="tablaReservas">Entrada de Vehiculo</th>
+                                    <th id="tablaReservas">Seleccionar</th>
+                                    
+                                        <c:forEach items="${reservasActivas}" var="reservaActiva" varStatus="status">
                                         <tr>
-                                            <td>${reservaActiva[0]}</td>
-                                            <td>${reservaActiva[1]}</td>
-                                            <td>${reservaActiva[2]}</td>
-                                            <td>${reservaActiva[3]}</td>
-                                            <td><input type="radio" name="reservaPK" value="${reservaActiva[4]}/${reservaActiva[2]}"></td>
-                                            <td><input type="radio" name="reservaCancelar" value="${reservaActiva[4]}/${reservaActiva[2]}"></td>
+                                            <td style="color:${color[status.index]}">${reservaActiva[0]}</td>
+                                            <td style="color:${color[status.index]}">${reservaActiva[1]}</td>
+                                            <td style="color:${color[status.index]}">${reservaActiva[2]}</td>
+                                            <td style="color:${color[status.index]}">${reservaActiva[3]}</td>
+                                            <td style="color:${color[status.index]}">${reservaActiva[5]}</td>
+                                            <td><input type="radio" name="reservaPK" value="${reservaActiva[4]}/${reservaActiva[2]}/${reservaActiva[5]}"></td>
                                         </tr>
                                     </c:forEach>
                                 </table>
@@ -151,11 +153,12 @@
                             <input type="submit" name="reporteUsuario" value="Generar Reporte">
                         </form>
                         <table >
-                            <th>Parqueadero</th>
-                            <th>Fecha de Reserva</th>
-                            <th>Fecha de Entrada</th>
-                            <th>Fecha de Salida</th>
-                            <th>Valor</th>
+                            <caption>Reportes</caption>
+                            <th id="tablaParqueadero">Parqueadero</th>
+                            <th id="tablaParqueadero">Fecha de Reserva</th>
+                            <th id="tablaParqueadero">Fecha de Entrada</th>
+                            <th id="tablaParqueadero">Fecha de Salida</th>
+                            <th id="tablaParqueadero">Valor</th>
                                 <c:forEach items="${reportes}" var="reporte">
                                 <tr>
                                     <td>${reporte[0]}</td>
@@ -170,27 +173,17 @@
                 </div>
             </div>
 
-            <div id='map' style="margin-left:27vw ; width: 73vw; height: 100vh; z-index: 0"> </div>
+            <div id='map' > </div>
             <!-- 73-->
-            <div id="card-2">
-                <%
-//                String nombre = (String) request.getAttribute("nombreParqueadero");
-//                String tarifa = (String) request.getAttribute("tarifaParqueadero");
-//                String direccion = (String) request.getAttribute("direccionParqueadero");
-                %>
-                <h1 id="ParqueaderoTitulo" > 
-                    <%--<%= nombre %>--%> 
-                </h1>
-                <h2 id="ParqueaderoTarifa">
-                    <%--<%= tarifa %>--%>
-                </h2>
-                <p id="ParqueaderoDireccion">
-                    <%--<%= direccion %>--%>
-                </p>
+            <div id="card-2" style="display: ${panelDerecho}">
+                <h1 id="ParqueaderoTitulo" > </h1>
+                <h2 id="ParqueaderoTarifa"> </h2>
+                <p id="ParqueaderoDireccion"> </p>
                 <form  action="./RespuestaUsuario" method="POST" >
                     <table class="tableQ" >
-                        <th>Plaza Id</th>
-                        <th> Reservar</th>
+                        <caption>Plaza Reserva</caption>
+                        <th id="plazaReserva">Plaza Id</th>
+                        <th id="plazaReserva"> Reservar</th>
                             <c:forEach items="${plazasLista}" var="plaza">
                             <tr>
                                 <td>${plaza}</td>
@@ -225,6 +218,7 @@
 
     <script src="assests/script.js"></script>
     <script>
+        
                                 checkInputs();
         <%            List<Object[]> json = new ArrayList<Object[]>();
             String result = "";
@@ -249,7 +243,6 @@
                                 for (var i = 0, max = a.length; i < max; i++) {
                                     a[i] = a[i].split("$");
                                 }
-                                console.log(a);
                                 geoJSON(a);
     </script>
 </html>

@@ -247,11 +247,12 @@ table tr {
 
 }
 
-.panel{
-    background: rgba(0,0,0,0.8);
-    color: white;
+.white{
+    background: white;
+    color: black;
     border-radius: 20px;
-    padding:40px;
+    margin-left:40px;
+    width: 100%;
 }
 
 input[type=submit], input[type=button]{
@@ -286,4 +287,41 @@ select {
 .mapboxgl-ctrl-attrib-inner{display:none}
 .mapboxgl-ctrl-logo{visibility:hidden}
 
+.filter{
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.8);
+    z-index: 99;
+    color:white;
+    display: none
+}
 
+.popUp{
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    width: 50vw;
+    height: auto;
+    border-radius: 20px;
+    background: white;
+    color: black;
+    margin: auto;
+    padding-left: 20px;
+        
+}
+
+
+#map{
+   margin-left:27vw ; width: 73vw; height: 100vh; z-index: 0;
+}
+
+@media only screen and (max-width: 380px) {
+  #map {
+      
+    /*background-color: lightblue;*/
+  }
+}

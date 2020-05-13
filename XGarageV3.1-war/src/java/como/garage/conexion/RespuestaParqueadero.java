@@ -15,10 +15,12 @@ import com.garage.sessionBeans.PlazaFacadeLocal;
 import com.garage.sessionBeans.ReservaFacadeLocal;
 import com.garage.sessionBeans.UsuarioFacadeLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,18 +38,18 @@ public class RespuestaParqueadero extends HttpServlet {
     private ReservaFacadeLocal reservaFacade;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacade;
+    private PlazaFacadeLocal plazaFacade;
 
     @EJB
     private ParqueaderoFacadeLocal parqueaderoFacade;
 
     @EJB
-    private PlazaFacadeLocal plazaFacade;
+    private UsuarioFacadeLocal usuarioFacade;
 
     
+
     
-    
-    
+
     private Parqueadero park;
     private Usuario user;
     private Plaza plaza;
@@ -69,7 +71,7 @@ public class RespuestaParqueadero extends HttpServlet {
             throws ServletException, IOException {
         if (request.getParameter("agregarPlaza") != null) {
             if (request.getParameter("agregarPlaza").equals("Agregar Plaza")) {
-                System.out.println(agregarPlaza(request, response));
+                agregarPlaza(request, response);
                 request.setAttribute("plazas", plazaFacade.obtenerPlazas(request.getParameter("usuario")));
                 reenvio = request.getRequestDispatcher("actualizarDatosParqueadero.jsp");
                 reenvio.forward(request, response);
@@ -77,7 +79,7 @@ public class RespuestaParqueadero extends HttpServlet {
 
         } else if (request.getParameter("actualizarDatos") != null) {
             if (request.getParameter("actualizarDatos").equals("Actualizar Datos")) {
-                System.out.println(actualizarDatos(request, response));
+                actualizarDatos(request, response);
                 reenvio = request.getRequestDispatcher("actualizarDatosParqueadero.jsp");
                 reenvio.forward(request, response);
             }
@@ -89,7 +91,7 @@ public class RespuestaParqueadero extends HttpServlet {
 
         } else if (request.getParameter("eliminarCuenta") != null) {
             if (request.getParameter("eliminarCuenta").equals("Eliminar Cuenta")) {
-                System.out.println(eliminarCuenta(request, response));
+                eliminarCuenta(request, response);
                 reenvio = request.getRequestDispatcher("index.jsp");
                 reenvio.forward(request, response);
             }
@@ -105,32 +107,39 @@ public class RespuestaParqueadero extends HttpServlet {
 
         } else if (request.getParameter("adquirirPlaza") != null) {
             if (request.getParameter("adquirirPlaza").equals("Adquirir Plaza")) {
-                System.out.println(adquirirPlaza(request, response));
+                adquirirPlaza(request, response);
                 reenvio = request.getRequestDispatcher("parqueadero.jsp");
                 reenvio.forward(request, response);
             }
-//        } else if (request.getParameter("retirarAuto") != null) {
-//            if (request.getParameter("retirarAuto").equals("Retirar Auto")) {
-//                System.out.println(retirarAuto(request, response));
-//                reenvio = request.getRequestDispatcher("parqueadero.jsp");
-//                reenvio.forward(request, response);
-//            }
-//        }
-        }else if (request.getParameter("eliminarPlaza") != null) {
+        } else if (request.getParameter("eliminarPlaza") != null) {
             if (request.getParameter("eliminarPlaza").equals("Eliminar Plaza")) {
-                System.out.println(eliminarPlaza(request, response));
+                eliminarPlaza(request, response);
                 reenvio = request.getRequestDispatcher("actualizarDatosParqueadero.jsp");
                 reenvio.forward(request, response);
             }
         } else if (request.getParameter("ingresarVehiculoReserva") != null) {
-            if (request.getParameter("ingresarVehiculoReserva").equals("Ingresar Vehivulo Reserva")) {
+            if (request.getParameter("ingresarVehiculoReserva").equals("Ingresar Vehiculo")) {
                 ingresarVehiculoReserva(request, response);
                 reservasActivas(request, response);
             }
         } else if (request.getParameter("retirarVehiculoReserva") != null) {
-            if (request.getParameter("retirarVehiculoReserva").equals("Retirar Vehivulo Reserva")) {
+            if (request.getParameter("retirarVehiculoReserva").equals("Retirar Vehiculo")) {
                 retirarVehiculoReserva(request, response);
                 reservasActivas(request, response);
+            }
+        } else if (request.getParameter("historial") != null) {
+            if (request.getParameter("historial").equals("Historial")) {
+                historial(request, response);
+
+            }
+        } else if (request.getParameter("penalizar") != null) {
+            if (request.getParameter("penalizar").equals("Penalizar")) {
+                penalizar(request, response);
+                reservasActivas(request, response);
+            }
+        } else if (request.getParameter("pendientes") != null) {
+            if (request.getParameter("pendientes").equals("Pendientes")) {
+                pendientes(request, response);
             }
         }
 
@@ -166,7 +175,8 @@ public class RespuestaParqueadero extends HttpServlet {
         String ciudad = request.getParameter("ciudad");
         String direccion = request.getParameter("direccion");
         String localidad = request.getParameter("localidad");
-
+        String latitud = request.getParameter("latitud");
+        String longitud = request.getParameter("longitud");
         park = parqueaderoFacade.find(nit);
         user = usuarioFacade.find(usuario);
         if (!contrasena.equals("")) {
@@ -182,6 +192,12 @@ public class RespuestaParqueadero extends HttpServlet {
         }
         if (!direccion.equals("")) {
             park.setDireccion(direccion);
+        }
+        if (!latitud.equals("")) {
+            park.setLatitud(Double.parseDouble(latitud));
+        }
+        if (!longitud.equals("")) {
+            park.setLongitud(Double.parseDouble(longitud));
         }
         park.setLocalidad(localidad);
         parqueaderoFacade.edit(park);
@@ -226,17 +242,49 @@ public class RespuestaParqueadero extends HttpServlet {
             throws ServletException, IOException {
         String nit = request.getParameter("nit");
         String fecha = request.getParameter("fecha");
-        
-        System.out.println(fecha);
-        if (fecha.equals("")){
-            request.setAttribute("reservasActivas", parqueaderoFacade.reservasActivas(nit));
-        }else {
-            System.out.println("Entro");
-            request.setAttribute("reservasActivas", parqueaderoFacade.reservasActivas(nit, fecha));
+
+        if (fecha.equals("")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            Timestamp ts = new Timestamp(System.currentTimeMillis());
+            Date date = ts;
+            fecha = formatter.format(date);
         }
+
+        List<Object[]> lista = parqueaderoFacade.reservasActivas(nit, fecha);
+        List<String> color = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        Date date = ts;
+        String ya = formatter.format(date);
+        Date fechaActual = transformacionFecha(ya);
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i)[4] == null) {
+                Date fechaEntrada = transformacionFecha(lista.get(i)[3].toString());
+                long diferencia = fechaActual.getTime() - fechaEntrada.getTime();
+                long minutos = diferencia / (60 * 1000);
+                if (minutos > 30) {
+                    color.add("red");
+                }
+            }else{
+            color.add("black");
+            }
+        }
+        
+        request.setAttribute("reservasActivas", lista);
+        request.setAttribute("color", color);
+        request.setAttribute("filterV", "none");
         
         reenvio = request.getRequestDispatcher("parqueadero.jsp");
         reenvio.forward(request, response);
+    }
+
+    private Date transformacionFecha(String fecha) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        try {
+            return format.parse(fecha);
+        } catch (ParseException ex) {
+            return new Date();
+        }
     }
 
     /*El Metodo se encarga de retornar las plazas disponibles en el momento de la solicitud*/
@@ -244,6 +292,7 @@ public class RespuestaParqueadero extends HttpServlet {
             throws ServletException, IOException {
         request.setAttribute("plazasDisponibles", parqueaderoFacade.plazasDisponibles(request.getParameter("nit"),
                 request.getParameter("tipoDeAuto")));
+        request.setAttribute("filterV", "none");
         reenvio = request.getRequestDispatcher("parqueadero.jsp");
         reenvio.forward(request, response);
     }
@@ -254,91 +303,137 @@ public class RespuestaParqueadero extends HttpServlet {
      */
     private String adquirirPlaza(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (request.getParameter("tipoReserva") != null) {
-            System.out.println("com.garage.conexion.RespuestaParqueadero.adquirirPlaza()");
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH:mm");
+
+        if (request.getParameter("plazaId") != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             Timestamp ts = new Timestamp(System.currentTimeMillis());
             Date date = ts;
             String fechaReserva = formatter.format(date);
-            String plazaId = request.getParameter("tipoReserva");
+            String plazaId = request.getParameter("plazaId");
             String placa = request.getParameter("placa");
             String modelo = request.getParameter("modelo");
-
-//            plaza = plazaFacade.find(plazaId);
-//            plaza.setDisponibilidad(false);
-//            plazaFacade.edit(plaza);
-            ReservaPK llavePrimaria = new ReservaPK(fechaReserva, plazaId);
-            reserva = new Reserva(llavePrimaria, true, modelo, placa);
+            llavePrimaria = new ReservaPK(fechaReserva, plazaId);
+            reserva = new Reserva(llavePrimaria, null, modelo, placa, true, fechaReserva);
             reservaFacade.create(reserva);
             return "El codigo de acceso es: " + plazaId + "/" + fechaReserva;
         }
         return "Favor Elegir Plaza";
     }
 
-    /*El Metodo se encarga de dar por terminada una reserva segun el codigo ingresado*/
-//    private String retirarAuto(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        String codigo[] = request.getParameter("codigoReserva").split("/");
-//        llavePrimaria = new ReservaPK(codigo[1], codigo[0]);
-//
-//        if ((reserva = reservaFacade.find(llavePrimaria)) != null) {
-//            if (reserva.getActivo() == true) {
-//                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH:mm");
-//                Timestamp ts = new Timestamp(System.currentTimeMillis());
-//                Date date = ts;
-//                reserva.setFechasalida(formatter.format(date));
-//                reserva.setActivo(false);
-//                reservaFacade.edit(reserva);
-//                plaza = plazaFacade.find(codigo[0]);
-//                plaza.setDisponibilidad(true);
-//                plazaFacade.edit(plaza);
-//                return "El vehiculo puede ser retirado";
-//            }
-//        }
-//        return "El codigo de reserva no coincide";
-//    }
-
     private void ingresarVehiculoReserva(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("reservaActivaSeleccionada").split("/")[0];
-        String fecha = request.getParameter("reservaActivaSeleccionada").split("/")[1];
-        System.out.println(fecha + " " + id);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
-        Date date = ts;
+        if (request.getParameter("reservaActivaSeleccionada") != null) {
+            String arreglo[] = request.getParameter("reservaActivaSeleccionada").split("/");
+            String id = arreglo[0];
+            String fecha = arreglo[1];
+            String color = arreglo[2];
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            Timestamp ts = new Timestamp(System.currentTimeMillis());
+            Date date = ts;
 
-        String fechaIngreso = formatter.format(date);
-        System.out.println(fechaIngreso);
-        ReservaPK re = new ReservaPK(fecha, id);
-        reserva = reservaFacade.find(re);
-        if (reserva.getFechaentrada() == null) {
-            reserva.setFechaentrada(fechaIngreso);
-            reservaFacade.edit(reserva);
+            String fechaIngreso = formatter.format(date);
+            ReservaPK re = new ReservaPK(fecha, id);
+            reserva = reservaFacade.find(re);
+            if (reserva.getFechaentrada() == null && !color.equals("red")) {
+                reserva.setFechaentrada(fechaIngreso);
+                reservaFacade.edit(reserva);
+            }
         }
     }
 
     private void retirarVehiculoReserva(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("reservaActivaSeleccionada").split("/")[0];
-        String fecha = request.getParameter("reservaActivaSeleccionada").split("/")[1];
+        if(request.getParameter("reservaActivaSeleccionada") != null){
+            String areglo[] = request.getParameter("reservaActivaSeleccionada").split("/");
 
+            String id = areglo[0];
+            String fecha = areglo[1];
+            String placa = areglo[3];
+            String entrada = areglo[4];
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            Timestamp ts = new Timestamp(System.currentTimeMillis());
+            Date date = ts;
+
+            String fechaSalida = formatter.format(date);
+
+            ReservaPK re = new ReservaPK(fecha, id);
+            reserva = reservaFacade.find(re);
+            double costo = 0;
+            if (reserva.getFechaentrada() != null) {
+                if (reserva.getFechasalida() == null) {
+                    reserva.setFechasalida(fechaSalida);
+                    reservaFacade.edit(reserva);
+                    costo = reservaFacade.costo(new ReservaPK(fecha, id), "facturar");
+                    reserva.setValor(costo);
+                    reserva.setActivo(false);
+                    reservaFacade.edit(reserva);
+                }
+            }
+            request.setAttribute("filterV", "block");
+            request.setAttribute("popUpH", "Factura Exitosa");
+            request.setAttribute("popUpD", "Placa: " + placa + "<br/>" + "Fecha de entrada: " + entrada + "<br/>" + "Fecha de salida: " + fechaSalida + "<br/>" + "Costo: " + costo);
+        }
+    }
+
+    private void historial(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String nit = request.getSession().getAttribute("nit").toString();
+        List<Object[]> resultado = reservaFacade.historialParqueadero(nit);
+        request.setAttribute("reservasActivas", resultado);
+        request.setAttribute("filterV", "none");
+        reenvio = request.getRequestDispatcher("parqueadero.jsp");
+        reenvio.forward(request, response);
+        
+    }
+
+    private void pendientes(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String nit = request.getSession().getAttribute("nit").toString();
+        List<Object[]> lista = reservaFacade.pendientesParqueadero(nit);
+        
+        List<String> color = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         Date date = ts;
-
-        String fechaSalida = formatter.format(date);
-
-        ReservaPK re = new ReservaPK(fecha, id);
-        Reserva reserva = reservaFacade.find(re);
-
-        if (reserva.getFechaentrada() != null) {
-            if (reserva.getFechasalida() == null) {
-                reserva.setFechasalida(fechaSalida);
-                reserva.setActivo(false);
-                reservaFacade.edit(reserva);
+        String ya = formatter.format(date);
+        Date fechaActual = transformacionFecha(ya);
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i)[4] == null) {
+                Date fechaEntrada = transformacionFecha(lista.get(i)[3].toString());
+                long diferencia = fechaActual.getTime() - fechaEntrada.getTime();
+                long minutos = diferencia / (60 * 1000);
+                if (minutos > 30) {
+                    color.add("red");
+                }
+            }else{
+            color.add("black");
             }
         }
+        request.setAttribute("reservasActivas", lista);
+        request.setAttribute("color", color);
+        request.setAttribute("filterV", "none");
+        reenvio = request.getRequestDispatcher("parqueadero.jsp");
+        reenvio.forward(request, response);
+    }
 
+    private void penalizar(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if(request.getParameter("reservaActivaSeleccionada") != null){
+            String arreglo[] = request.getParameter("reservaActivaSeleccionada").split("/");
+            String id = arreglo[0];
+            String fecha = arreglo[1];
+            String color = arreglo[2];
+
+            if (color.equals("red")) {
+                Reserva re = reservaFacade.find(new ReservaPK(fecha, id));
+                re.setFechaentrada("PENALIZADO");
+                re.setFechasalida("PENALIZADO");
+                re.setActivo(Boolean.FALSE);
+                re.setValor(reservaFacade.costo(new ReservaPK(fecha, id), "penalizar"));
+                reservaFacade.edit(re);
+            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

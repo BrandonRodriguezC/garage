@@ -65,7 +65,7 @@ public class PlazaFacade extends AbstractFacade<Plaza> implements PlazaFacadeLoc
         }
         return false;
     }
-    
+
     @Override
     public List<Object[]> obtenerPlazas(String nit) {
         TypedQuery<Object[]> query = em.createQuery(
@@ -73,16 +73,5 @@ public class PlazaFacade extends AbstractFacade<Plaza> implements PlazaFacadeLoc
         query.setParameter("nit", nit);
         return query.getResultList();
     }
-    
-//    @Override
-//    public String reservarPlaza(String id) {
-////        TypedQuery<Object[]> query = em.createQuery ("SELECT a.plazaid, a.tipodeauto FROM Plaza AS a WHERE a.nit.nit = :nit AND a.disponibilidad = TRUE AND a.tipodeauto = :tipodeauto", Object[].class);
-////        query.setParameter("nit", nit);
-////        query.setParameter("tipodeauto", tipoDeAuto);
-////        List<Object[]> resultados = query.getResultList();
-////        String plazaId = resultados.get(0)[0].toString();
-//        Plaza plaza = find(id);
-//        edit(plaza);
-//        return id;
-//    }
+   
 }

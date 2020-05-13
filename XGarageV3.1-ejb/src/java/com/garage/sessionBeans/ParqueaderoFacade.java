@@ -6,6 +6,9 @@
 package com.garage.sessionBeans;
 
 import com.garage.entities.Parqueadero;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -55,9 +58,6 @@ public class ParqueaderoFacade extends AbstractFacade<Parqueadero> implements Pa
         query = em.createQuery("DELETE FROM Plaza AS p WHERE p.nit.nit = :nit");
         query.setParameter("nit", nit);
         query.executeUpdate();
-//        query = em.createQuery("DELETE FROM Ubicacion AS u WHERE u.nit = :nit");
-//        query.setParameter("nit", nit);
-//        query.executeUpdate();
         em.remove(find(nit));
     }
 
@@ -70,41 +70,32 @@ public class ParqueaderoFacade extends AbstractFacade<Parqueadero> implements Pa
     public Parqueadero getParqueadero(String usuario) {
         TypedQuery<Parqueadero> query = em.createQuery("SELECT p FROM Parqueadero AS p WHERE p.usuario.usuario = :usuario", Parqueadero.class);
         query.setParameter("usuario", usuario);
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.out.println(query.getSingleResult().getNombre());
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return query.getSingleResult();
-    }
-
-    @Override
-    public List<Object[]> reservasActivas(String nit) {
-        TypedQuery<Object[]> query = em.createQuery(
-                "SELECT r.reservaPK.plazaid, r.numerolicencia.nombre, r.reservaPK.fecha, r.fechareserva, r.fechaentrada ,r.fechasalida, r.valor  FROM Reserva AS r WHERE r.activo = TRUE AND r.plaza.nit.nit = :nit ORDER BY r.fechareserva ASC " //                "SELECT r.reservaPK, r.numerolicencia.usuario.usuario, r.reservaPK.fecha, r.fechaentrada, r.fechasalida, r.valor FROM Plaza AS p INNER JOIN p.reservaCollection AS r WHERE r.activo = TRUE AND p.nit.nit = :nit ORDER BY r.reservaPK.fecha DESC"
-                ,Object[].class);
-        //Se agrego el ORDER BY r.fechaReserva ASC para tenerlo ordenado por las posibles entradas más proximas
-        
-        query.setParameter("nit", nit);
-        return query.getResultList();
     }
     
     @Override
     public List<Object[]> reservasActivas(String nit, String fecha) {
-        System.out.println("Dentro fecha: " + fecha);
         TypedQuery<Object[]> query = em.createQuery(
-                "SELECT r.reservaPK.plazaid, r.numerolicencia.nombre, r.reservaPK.fecha, r.fechareserva, r.fechaentrada ,r.fechasalida, r.valor  FROM Reserva AS r WHERE r.activo = TRUE AND r.plaza.nit.nit = :nit AND r.fechareserva LIKE :fecha ORDER BY r.fechareserva ASC " //                "SELECT r.reservaPK, r.numerolicencia.usuario.usuario, r.reservaPK.fecha, r.fechaentrada, r.fechasalida, r.valor FROM Plaza AS p INNER JOIN p.reservaCollection AS r WHERE r.activo = TRUE AND p.nit.nit = :nit ORDER BY r.reservaPK.fecha DESC"
-                ,Object[].class);
-        //Variacion del metodo reservasActivas para hacer filtado por dia
-        query.setParameter("fecha", fecha.split("T")[0]+"%");
+                "SELECT r.reservaPK.plazaid, r.placa, r.reservaPK.fecha, r.fechareserva, r.fechaentrada ,r.fechasalida, r.valor  FROM Reserva AS r WHERE r.activo = TRUE AND r.plaza.nit.nit = :nit AND r.fechareserva LIKE :fecha ORDER BY r.fechareserva ASC " //                "SELECT r.reservaPK, r.numerolicencia.usuario.usuario, r.reservaPK.fecha, r.fechaentrada, r.fechasalida, r.valor FROM Plaza AS p INNER JOIN p.reservaCollection AS r WHERE r.activo = TRUE AND p.nit.nit = :nit ORDER BY r.reservaPK.fecha DESC"
+                ,
+                 Object[].class);
+        query.setParameter("fecha", fecha.split("T")[0] + "%");
         query.setParameter("nit", nit);
         return query.getResultList();
     }
 
     @Override
     public List<Object[]> plazasDisponibles(String nit, String tipoDeAuto) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        Date date = ts;
+        String fecha = formatter.format(date).split("T")[0] + "%";
         TypedQuery<Object[]> query = em.createQuery(
-                "SELECT a.plazaid, a.tipodeauto FROM Plaza AS a WHERE a.nit.nit = :nit AND a.tipodeauto = :tipodeauto", Object[].class);
+                "SELECT pl.plazaid, pl.tipodeauto FROM Plaza AS pl WHERE pl.nit.nit = :nit AND pl.tipodeauto = :tipoDeAuto AND pl.plazaid NOT IN (SELECT re.reservaPK.plazaid FROM Reserva AS re WHERE re.fechareserva LIKE :fecha AND re.activo = TRUE) ",
+                 Object[].class);
+        query.setParameter("fecha", fecha);
         query.setParameter("nit", nit);
-        query.setParameter("tipodeauto", tipoDeAuto);
+        query.setParameter("tipoDeAuto", tipoDeAuto);
         return query.getResultList();
     }
 

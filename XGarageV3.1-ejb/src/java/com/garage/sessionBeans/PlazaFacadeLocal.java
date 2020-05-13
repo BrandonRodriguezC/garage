@@ -33,6 +33,5 @@ public interface PlazaFacadeLocal {
     public boolean eliminarPlaza(String plazaId);
 
     List<Object[]> obtenerPlazas(String parqueadero);
-
-//    String reservarPlaza(String id);
+    
 }

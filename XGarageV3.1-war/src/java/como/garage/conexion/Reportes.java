@@ -5,10 +5,10 @@
  */
 package como.garage.conexion;
 
+import com.garage.entities.Precio;
+import com.garage.sessionBeans.PrecioFacadeLocal;
 import com.garage.sessionBeans.ReservaFacadeLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,7 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 public class Reportes extends HttpServlet {
 
     @EJB
+    private PrecioFacadeLocal precioFacade;
+
+    @EJB
     private ReservaFacadeLocal reservaFacade;
+    
+    
 
 
     private RequestDispatcher reenvio;
@@ -47,6 +52,12 @@ public class Reportes extends HttpServlet {
                 reportePorIntervalo(request, response);
             }else if (request.getParameter("reportesSecretariaTransportes").equals("Reporte por Horario")){
                 reportePorHorario(request, response);
+            }else if ((request.getParameter("reportesSecretariaTransportes").equals("Reporte por Plazas"))){
+                reportePorPlazas(request, response);
+            }
+        }else if (request.getParameter("actualizarPrecios") != null){
+            if (request.getParameter("actualizarPrecios").equals("Actualizar Precios")){
+                actualizarPrecios(request, response);
             }
         }
     }
@@ -56,24 +67,35 @@ public class Reportes extends HttpServlet {
             throws ServletException, IOException {
 
         String fecha = request.getParameter("fecha_Diaria");
-        String nombreParqueadero = request.getParameter("nombreParqueadero");
         String localidad = request.getParameter("localidad");
         
-//        System.out.println(fecha + "   " + nombreParqueadero + "   " + localidad);
-        
         if(fecha.equals("")){
-            request.setAttribute("advertencia", "Para Realizar este reporte se requiere la fecha");
+            request.getSession().setAttribute("advertencia", "Para Realizar este reporte se requiere la fecha");
         }else{
-            if (nombreParqueadero.equals("")) {
-                if (localidad.equals("Todos")) {
-                    request.setAttribute("reportes", reservaFacade.reporteTotal(fecha));
-                } else {
-                    request.setAttribute("reportes", reservaFacade.reporteLocalidad(localidad, fecha));
-                }
+            if (localidad.equals("Todos")) {
+                request.getSession().setAttribute("reporteDiario", reservaFacade.reporteTotal(fecha));
             } else {
-                request.setAttribute("reportes", reservaFacade.reportesParqueadero(nombreParqueadero, fecha));
+                request.getSession().setAttribute("reporteDiario", reservaFacade.reporteLocalidad(localidad, fecha));
             }
+            request.getSession().setAttribute("tipoReporte", "reporteDiario");
         }
+        
+        reenvio = request.getRequestDispatcher("reportes.jsp");
+        reenvio.forward(request, response);
+    }
+    
+    private void reportePorPlazas (HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String nombreParqueadero = request.getParameter("nombreParqueadero");
+        String fecha = request.getParameter("fecha_Diaria");
+        
+        if(!fecha.equals("") || !nombreParqueadero.equals("")){
+            request.getSession().setAttribute("reportePlaza", reservaFacade.reportesParqueadero(nombreParqueadero, fecha));
+            request.getSession().setAttribute("tipoReporte", "reportePlaza");
+        }else{
+            request.setAttribute("advertencia", "Para Realizar el Reporte por Plazas se requiere el nombre del establecimiento y la fecha");
+        }
+        
         reenvio = request.getRequestDispatcher("reportes.jsp");
         reenvio.forward(request, response);
     }
@@ -87,20 +109,20 @@ public class Reportes extends HttpServlet {
         String localidad = request.getParameter("localidad");
         String nombreParqueadero = request.getParameter("nombreParqueadero");
         
-        if(fechaInicio.equals("") || fechaFin.equals("")){
-            request.setAttribute("advertencia", "Para Realizar este reporte se requiere el intervalo de fechas");
-        }else{
+        if(!fechaInicio.equals("") || ! fechaFin.equals("")){
             if (nombreParqueadero.equals("")) {
                 if (localidad.equals("Todos")) {
-                    request.setAttribute("reportes", reservaFacade.reporteTotal(fechaInicio, fechaFin));
+                    request.getSession().setAttribute("reporteIntervalo", reservaFacade.reporteTotal(fechaInicio, fechaFin));
                 } else {
-                    request.setAttribute("reportes", reservaFacade.reporteLocalidad(localidad, fechaInicio, fechaFin));
+                    request.getSession().setAttribute("reporteIntervalo", reservaFacade.reporteLocalidad(localidad, fechaInicio, fechaFin));
                 }
             } else {
-                request.setAttribute("reportes", reservaFacade.reportesParqueadero(nombreParqueadero, fechaInicio, fechaFin));
+                request.getSession().setAttribute("reporteIntervalo", reservaFacade.reportesParqueadero(nombreParqueadero, fechaInicio, fechaFin));
             }
+            request.getSession().setAttribute("tipoReporte", "reporteIntervalo");
+        }else{
+            request.setAttribute("advertencia", "Para realizar el reporte por intervalo debe ingresar las fechas");
         }
-//        System.out.println(fechaInicio + "    "+ fechaFin + "    " + nombreParqueadero);
         reenvio = request.getRequestDispatcher("reportes.jsp");
         reenvio.forward(request, response);
     }
@@ -108,23 +130,48 @@ public class Reportes extends HttpServlet {
     /*El Metodo se encarga de realizar los reportes segun los horarios del dia (Mañana, Tarde, Noche y Madrugada) (FALTA COMPLEMENTARLO)*/
     private void reportePorHorario (HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fecha = request.getParameter("fecha_Diaria");;
+        String fecha = request.getParameter("fecha_Diaria");
         String nombreParqueadero = request.getParameter("nombreParqueadero");
         
-        if(fecha.equals("") || nombreParqueadero.equals("")){
-            request.setAttribute("advertencia", "Para Realizar este reporte se requiere el nombre del establecimiento y la fecha");
-        }else{
-            List<Object[]> horarios = reservaFacade.reporteHorario(nombreParqueadero, fecha, "Madrugada");
-            horarios.addAll(reservaFacade.reporteHorario(nombreParqueadero, fecha, "Mañana"));
-            horarios.addAll(reservaFacade.reporteHorario(nombreParqueadero, fecha, "Tarde"));
-            horarios.addAll(reservaFacade.reporteHorario(nombreParqueadero, fecha, "Noche"));      
-            request.setAttribute("reportes", horarios);
+        if(!fecha.equals("") || !nombreParqueadero.equals("")){
+            request.getSession().setAttribute("reporteHorarioMad",reservaFacade.reporteHorario(nombreParqueadero, fecha, "Madrugada"));
+            request.getSession().setAttribute("reporteHorarioMan", reservaFacade.reporteHorario(nombreParqueadero, fecha, "Mañana"));
+            request.getSession().setAttribute("reporteHorarioTar", reservaFacade.reporteHorario(nombreParqueadero, fecha, "Tarde"));
+            request.getSession().setAttribute("reporteHorarioNoc", reservaFacade.reporteHorario(nombreParqueadero, fecha, "Noche")); 
+            request.getSession().setAttribute("tipoReporte", "reporteHorario");
             
+        }else{
+            request.setAttribute("advertencia", "Para Realizar el Reporte por Horario se requiere el nombre del establecimiento y la fecha");
         }
+        
+        
         reenvio = request.getRequestDispatcher("reportes.jsp");
         reenvio.forward(request, response);
     }
 
+    public void actualizarPrecios (HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String tipoPrecio = request.getParameter("tipoPrecio");
+        String precioMinuto = request.getParameter("precioMinuto");
+        String precioHora = request.getParameter("precioHora");
+        
+        if(!precioMinuto.equals("") && !precioHora.equals("")){
+            Precio precio = precioFacade.find(tipoPrecio);
+            if (precio != null) {
+                precio.setPreciominuto(Double.parseDouble(precioMinuto));
+                precio.setPreciohora(Double.parseDouble(precioHora));
+                
+                precioFacade.edit(precio);
+            }
+        }else{
+            request.setAttribute("reporte", "No han sido ingresados");
+        }
+        reenvio = request.getRequestDispatcher("actualizarPrecios.jsp");
+        reenvio.forward(request, response);
+            
+    }
+    
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

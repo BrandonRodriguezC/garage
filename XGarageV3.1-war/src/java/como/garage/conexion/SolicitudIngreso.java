@@ -13,7 +13,6 @@ import com.garage.sessionBeans.ParqueaderoFacadeLocal;
 import com.garage.sessionBeans.PrecioFacadeLocal;
 import com.garage.sessionBeans.UsuarioFacadeLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,16 +27,17 @@ import javax.servlet.http.HttpServletResponse;
 public class SolicitudIngreso extends HttpServlet {
 
     @EJB
-    private ClienteFacadeLocal clienteFacade;
-
-    @EJB
-    private UsuarioFacadeLocal usuarioFacade;
+    private PrecioFacadeLocal precioFacade;
 
     @EJB
     private ParqueaderoFacadeLocal parqueaderoFacade;
 
     @EJB
-    private PrecioFacadeLocal precioFacade;
+    private UsuarioFacadeLocal usuarioFacade;
+
+    @EJB
+    private ClienteFacadeLocal clienteFacade;
+
 
     
     
@@ -64,20 +64,23 @@ public class SolicitudIngreso extends HttpServlet {
             }
         } else if (request.getParameter("cambioContrasena") != null) {
             if (request.getParameter("cambioContrasena").equals("Cambiar ContraseÃ±a")) {
-                System.out.println(cambioContrasena(request, response));
+                cambioContrasena(request, response);
                 reenvio = request.getRequestDispatcher("ingreso.jsp");
                 reenvio.forward(request, response);
             }
         } else if (request.getParameter("registro") != null) {
             if (usuarioFacade.find(request.getParameter("usuario")) == null) {
-                user = new Usuario(request.getParameter("usuario"), request.getParameter("contrasena"), request.getParameter("tipoCliente"));
 
-                if (request.getParameter("registro").equals("Registrar Usuario")) {
-                    System.out.println(registroUsuario(request, response, user));
+                if (usuarioFacade.find(request.getParameter("usuario")) == null) {
+                    user = new Usuario(request.getParameter("usuario"), request.getParameter("contrasena"), request.getParameter("tipoCliente"));
+                    if (request.getParameter("registro").equals("Registrar Usuario")) {
+                        registroUsuario(request, response, user);
 
-                } else if (request.getParameter("registro").equals("Registrar Parqueadero")) {
-                    System.out.println(registroParqueadero(request, response, user));
+                    } else if (request.getParameter("registro").equals("Registrar Parqueadero")) {
+                        registroParqueadero(request, response, user);
+                    }
                 }
+            
                 reenvio = request.getRequestDispatcher("ingreso.jsp");
                 reenvio.forward(request, response);
             }
@@ -100,7 +103,7 @@ public class SolicitudIngreso extends HttpServlet {
                 request.getSession().setAttribute("telefono", us.getTelefono());
                 request.getSession().setAttribute("tipodocumento", us.getTipodocumento());
                 request.getSession().setAttribute("documentoidentidad", us.getDocumentoidentidad());
-
+                request.getSession().setAttribute("panelDerecho", "none");
                 reenvio = request.getRequestDispatcher("usuario.jsp");
                 reenvio.forward(request, response);
 
@@ -112,8 +115,12 @@ public class SolicitudIngreso extends HttpServlet {
                 request.getSession().setAttribute("ciudad", par.getCiudad());
                 request.getSession().setAttribute("direccion", par.getDireccion());
                 request.getSession().setAttribute("localidad", par.getLocalidad().split(" ")[1]);
-
+                request.setAttribute("filterV", "none");
                 reenvio = request.getRequestDispatcher("parqueadero.jsp");
+                reenvio.forward(request, response);
+            }else if (user.getTipodeusuario().equals("mintransporte")){
+                request.getSession().setAttribute("usuario", user.getUsuario());
+                reenvio = request.getRequestDispatcher("actualizarPrecios.jsp");
                 reenvio.forward(request, response);
             }
         } else {
@@ -162,12 +169,11 @@ public class SolicitudIngreso extends HttpServlet {
         String longitud = request.getParameter("longitud").trim();
         String latitud = request.getParameter("latitud").trim();
         String tipoParqueadero = request.getParameter("tipo_Parqueadero");
-
-        System.out.println(tipoParqueadero);
+        
         if (parqueaderoFacade.find(nit) == null) {
             usuarioFacade.create(user);
             park = new Parqueadero(user, nit, nombre, precioFacade.find(tipoParqueadero), Double.parseDouble(longitud), Double.parseDouble(latitud), ciudad, direccion, localidad);
-            // System.out.println(park.toString());
+            
             parqueaderoFacade.create(park);
             return "El parqueadero: " + nombre + " ha sido creado con exito";
         }
