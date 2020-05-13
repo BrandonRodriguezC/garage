@@ -6,7 +6,7 @@ Repositorio 2020-1 Equipo Garage del curso Métodos formales
 
 Se corrigieron errores relacionados con métodos que causaban problemas de ejecución, es decir, generaban excepciones; por otro lado, se 
 corrigieron problemas asociados con los JSP, pues algunas etiquetas no cerraban causando problemas en el envió de datos a los Servlet. 
-Por otro lado, se realizó limpieza general al código en donde se eliminó aquello comentado e innecesario.
+Y por último, se realizó limpieza general al código en donde se eliminó aquello comentado e innecesario.
 
 ## Actualizaciones
 
