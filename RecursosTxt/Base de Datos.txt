@@ -1,4 +1,17 @@
 -- ...................BASE DE DATOS...................
+-- Nombre Base de Datos: XGarageVFP
+-- Usuario: xgarageVF
+-- Contraseña: xgarageVF
+------------------------------Servidor-----------------------------
+-- nombre del pool: XGarageVFPPool
+-- tipo de datos: javax.sql.DataSource
+-- Base de Datos: JavaDB
+
+-- Resource: jdbc/XGarageVFP
+-- PoolName: XGarageVFPPool
+-------------------------Unidad de Persistencia------------------
+-- jdbc/XGarageVFP
+-- ...................BASE DE DATOS...................
 
 CREATE TABLE usuario (
 usuario varchar(30) NOT NULL PRIMARY KEY,
