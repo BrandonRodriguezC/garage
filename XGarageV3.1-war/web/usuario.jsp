@@ -104,7 +104,7 @@
                         <div>
                             <h2>Tus reservas</h2>
                             <form action="./RespuestaUsuario" method="GET">
-                                <table class="tableQ">
+                                <table class="compacto">
                                     <caption>Reservas</caption>
                                     <th id="tablaReservas">Parqueadero</th>
                                     <th id="tablaReservas">Direccion</th>
@@ -152,7 +152,7 @@
                             <input type="hidden" name="numeroLicencia" value="${numeroLicencia}">
                             <input type="submit" name="reporteUsuario" value="Generar Reporte">
                         </form>
-                        <table >
+                            <table class="compacto">
                             <caption>Reportes</caption>
                             <th id="tablaParqueadero">Parqueadero</th>
                             <th id="tablaParqueadero">Fecha de Reserva</th>
@@ -180,7 +180,7 @@
                 <h2 id="ParqueaderoTarifa"> </h2>
                 <p id="ParqueaderoDireccion"> </p>
                 <form  action="./RespuestaUsuario" method="POST" >
-                    <table class="tableQ" >
+                    <table class="compacto" >
                         <caption>Plaza Reserva</caption>
                         <th id="plazaReserva">Plaza Id</th>
                         <th id="plazaReserva"> Reservar</th>

@@ -16,15 +16,15 @@ and open the template in the editor.
 }
 html{
     width: 100%;
-/*    height: 100%;
-    overflow: hidden*/
+    /*    height: 100%;
+        overflow: hidden*/
 }
 body{
     padding: 0;
     margin: 0;
     width: 100%;
-/*    height: 100%;
-    overflow: hidden*/
+    /*    height: 100%;
+        overflow: hidden*/
 }
 
 .flex{
@@ -100,9 +100,11 @@ a:visited{
 
 #menu{
     background: black;
+    color: white;
     /*background: rgba(0,0,0,0.8);*/
     z-index: 99;
-    text-align: right;
+    text-align: center;
+    height: 50px;
 }
 .slider{
     width: 27vw;
@@ -200,27 +202,27 @@ a:visited{
     display: none;
 }
 
-table{
+table.compacto{
     font-size: 8px;
 }
 
-table {
+table.compacto {
     border-collapse: collapse;
     width: 100%;
     font-size: 10px;
     border: 1px solid #ddd;
 }
 
-table th {
+table.compacto th {
     padding: 2px;
     background-color: black;
     color:white
 }
 
-table tr:nth-child(even){background-color: #f2f2f2;}
-table tr:nth-child(odd){background-color: #ddd;}
+table.compacto tr:nth-child(even){background-color: #f2f2f2;}
+table.compacto tr:nth-child(odd){background-color: #ddd;}
 
-table tr {
+table.compacto tr {
     text-align: left;
     color: black;
 }
@@ -247,13 +249,6 @@ table tr {
 
 }
 
-.white{
-    background: white;
-    color: black;
-    border-radius: 20px;
-    margin-left:40px;
-    width: 100%;
-}
 
 input[type=submit], input[type=button]{
     background-color: black;
@@ -311,17 +306,191 @@ select {
     color: black;
     margin: auto;
     padding-left: 20px;
-        
+
 }
 
 
 #map{
-   margin-left:27vw ; width: 73vw; height: 100vh; z-index: 0;
+    margin-left:27vw ; width: 73vw; height: 100vh; z-index: 0;
 }
 
+
+
+#register-user{
+    /*margin-left: 30px;*/
+     display: flex;
+   flex-direction: column;
+   text-align: right;
+  justify-content: center; align-items: center; 
+
+}
+#register-pass{
+   display: flex;
+   flex-direction: column;
+   text-align: right;
+  justify-content: center; align-items: center;  
+
+}
+
+#userF:hover{
+    cursor: pointer;
+    text-decoration: underline
+}
+
+#parkF:hover{
+    cursor: pointer;
+    text-decoration: underline
+}
+table{width: 28vw;
+}
+
+images{
+    overflow: hidden;
+    z-index: -3;
+}
+
+#register-park{
+/*    padding-left: 25px;*/
+ display: flex;
+   flex-direction: column;
+   text-align: right;
+  justify-content: center; align-items: center; 
+    display: none;
+}
+#image-pass{
+    height: 70vh;
+    width: 35vw;
+    background: url('https://images.unsplash.com/photo-1549927455-67cc16cc490c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60');
+    background-position:center;
+    background-size: cover; 
+    background-repeat: no-repeat
+}
+#image-user{ 
+    height: 70vh;
+    width: 35vw;
+    background: url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60');
+    background-position:center;
+    background-size: cover; 
+    background-repeat: no-repeat
+}
+#image-park{
+    height: 70vh;
+    width: 35vw;
+    background: url('https://images.unsplash.com/photo-1493780758133-e5cfb0d00354?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2397&q=80');
+    background-position: center;
+    background-size: cover;
+    display: none;
+}
+#imagen-formulario{
+     height: 70vh;
+    width: 35vw;
+    background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1772&q=80');
+    background-position:center;
+    background-size: cover; 
+    background-repeat: no-repeat
+}
+#imagen-Precios{
+     height: 70vh;
+    width: 35vw;
+    background: url('https://images.unsplash.com/photo-1500496733680-167c3db69389?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60');
+    background-position:center;
+    background-size: cover; 
+    background-repeat: no-repeat
+}
+
+.middle{
+    position: absolute;
+    height: 70vh;
+    width: 70vw;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    background: white;
+    color:black;
+    -webkit-box-shadow: 1px 4px 12px -3px rgba(0,0,0,0.75);
+    -moz-box-shadow: 1px 4px 12px -3px rgba(0,0,0,0.75);
+    box-shadow: 1px 4px 12px -3px rgba(0,0,0,0.75);
+}
+
+.left-dahsboard{
+    width: 17vw;
+    background: black;color: white;
+    padding: 10px;
+    margin-right: 5px;
+    min-height: calc(100vh - 50px);
+}
+.center-dashboard{
+    width: 23vw;
+    height: auto;
+    background: white;
+    padding: 10px;
+    min-height: 100vh-10px;
+    margin: 5px;
+}
+
+.right-dashboard{
+    width: 60vw;
+    height: auto;
+    background: white;
+    padding: 10px;
+    min-height: 100vh-10px;
+    margin: 5px;
+}
+
+.logo{
+
+    background-image: url('https://66.media.tumblr.com/bcad81e1eb1dfb511dc4114fef6c1d9e/7890fe78734543a2-67/s1280x1920/28cc0f83c117229fe35e89b4f78dc51bf5779d75.png');
+    background-size: contain;
+    width: 100px;
+    height: 50px;
+    background-repeat: no-repeat;
+}
+
+.logo:hover{
+    cursor: pointer
+}
+
+
+.panel{
+    width: 30vw;
+    height: auto;
+    background: white;
+    padding: 10px;
+    min-height: 100vh-10px;
+    margin: 5px;
+}
+.panel-reporte{
+    width: 81vw;
+    background: white;
+    margin: auto;
+    padding-left: 20px
+}
+#reporteMadrugada{
+      width: 20vw; 
+}
+
+#reporteManaina{
+       width: 20vw;
+}
+#reporteTarde{
+    width: 20vw;
+}
+#reporteNoche{
+       width: 20vw;
+}
+#reporteDiario{
+    width: 50vw;
+}
+#reporteIntervalo{
+     width: 50vw;
+}
+#reportePlaza{
+     width: 50vw;
+}
 @media only screen and (max-width: 380px) {
-  #map {
-      
-    /*background-color: lightblue;*/
-  }
+    #map {
+
+        /*background-color: lightblue;*/
+    }
 }

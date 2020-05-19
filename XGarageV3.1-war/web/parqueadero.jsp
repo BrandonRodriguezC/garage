@@ -20,8 +20,18 @@
 
 
         <div>
-            <div class="flex" style="position: absolute; width: 100vw; height: auto ">
-                <div class="white" style="margin-left:20px">
+            <div id="menu" >
+                <table style="width: 100vw">
+                    <tr>
+                        <th style="width: 150px"><div class="logo" onclick="location.href = 'index.jsp';"></div>
+                            </th>
+                        <th>Parqueadero</th>
+                        <th><a href="index.jsp"><i class="material-icons" style="font-size:30px; color:white  ">exit_to_app</i></a></th>
+                    </tr>
+                </table>  
+            </div>
+            <div class="flex" style="position: absolute; width: 100vw; height: auto; background: #fafafa">
+                <div class="left-dahsboard">
 
                     <h2 >Parqueadero</h2>
                     <h4>NIT: ${nit}</h4>
@@ -29,7 +39,7 @@
                     <h4>Ciudad: ${ciudad}</h4>
                     <h4>Direccion ${direccion}</h4>
                     <h4>Localidad: ${localidad}</h4>
-                    <a href="actualizarDatosParqueadero.jsp">Actualizar Datos</a>
+                    <!--<a href="actualizarDatosParqueadero.jsp">Actualizar Datos</a>-->
                     <form action="./RespuestaParqueadero" method="POST">
                         <!-- Posiblemente Innecesario-->
                         <input type="hidden" name="usuario" value="${usuario}">
@@ -39,6 +49,8 @@
                     </form>
                     <br>
 
+                </div>
+                <div class="center-dashboard">
 
 
                     <h2>Ingresar Vehiculo</h2>
@@ -57,9 +69,10 @@
                         <input type="hidden" name="nit" value="${nit}">
                         <input type="submit" name="plazasDisponibles" value="Plazas Disponibles">
                     </form>
+
                     <form action="./RespuestaParqueadero"  method="POST">
-                        <table class="tableQ">
-                            <caption>Reservar</caption>
+                        <table class="compacto">
+                            <caption style="visibility: hidden">Reservar</caption>
                             <th id="adquirirPlaza">Plaza ID</th>
                             <th id="adquirirPlaza">Tipo de Auto</th>
                             <th id="adquirirPlaza">Reservar</th>
@@ -83,16 +96,15 @@
 
                         <input type="submit" name="adquirirPlaza" value="Adquirir Plaza">
                     </form>
-
                 </div>
 
-                <div class="white" style="margin-left:20px; width:100%; margin-right: 20px">
-                    <div id="menu" style="background: none"><a href="index.jsp"><i class="material-icons" style="font-size:30px; color:black  ">exit_to_app</i></a>
-                    </div>
+
+                <div class="right-dashboard" >
+
                     <h2>Reservas Activas</h2>
                     <form action="./RespuestaParqueadero" method="GET"> 
-                        <table >
-                            <caption>Registros</caption>
+                        <table class="compacto" >
+                            <caption style="visibility: hidden">Registros</caption>
                             <th id="reservaActivaSeleccionada">Plaza ID</th>
                             <th id="reservaActivaSeleccionada">Placa</th>
                             <!--<th style="display: none">Fecha </th>-->

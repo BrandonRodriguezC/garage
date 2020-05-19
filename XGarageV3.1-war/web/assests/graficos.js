@@ -70,7 +70,7 @@ function crearBarras(nombre) {
         labels: ['Total de Reservas:'],
         fillOpacity: 0.6,
         hideHover: 'auto',
-        resize: true,
+        resize: false,
         barColors: ['#76D7C4', '#6C3483 '],
         gridTextColor: '#FFFFFF'
     });
@@ -83,6 +83,6 @@ function crearDonut(nombre) {
             {label: "Ingrese el Parqueadero", value: 1}
         ],
         colors: ["#8e54e9", "#4776e6"],
-        resize: true
+        resize: false
     });
 }
